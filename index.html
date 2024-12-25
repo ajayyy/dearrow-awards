@@ -76,7 +76,7 @@
             }
         }
 
-        const urls = text.match(/(https?:\/\/[^\s]+)/g);
+        const urls = text.match(/(https?:\/\/[^\s]+)/g) ?? [];
         for (const url of urls) {
             if (url.match(/youtube.com|youtu.be/)) {
                 const urlObject = new URL(url.replace(/[<>]/g, ''));
