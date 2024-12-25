@@ -1,0 +1,149 @@
+<script>
+    let choice1ID = null;
+    let choice2ID = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadNewChoices();
+
+        document.getElementById('choice1').addEventListener('mousedown', () => {
+            vote(choice1ID, choice2ID);
+        });
+
+        document.getElementById('choice2').addEventListener('mousedown', () => {
+            vote(choice2ID, choice1ID);
+        });
+    });
+
+    async function loadNewChoices() {
+        const request = await fetch("/find");
+        const data = await request.json();
+
+        const choice1 = data.choice1;
+        const choice2 = data.choice2;
+
+        choice1ID = choice1.id;
+        choice2ID = choice2.id;
+
+        document.getElementById('choice1text').innerText = choice1.content;
+        document.getElementById('choice2text').innerText = choice2.content;
+
+        document.getElementById('choice1image').innerHTML = "";
+        if (choice1.attachments.length > 0) {
+            const img = document.createElement('img');
+            img.src = choice1.attachments[0];
+            document.getElementById('choice1image').appendChild(img);
+        }
+
+        document.getElementById('choice2image').innerHTML = "";
+        if (choice2.attachments.length > 0) {
+            const img = document.createElement('img');
+            img.src = choice2.attachments[0];
+            document.getElementById('choice2image').appendChild(img);
+        }
+    }
+
+    function vote(choice1, choice2) {
+        fetch(`/vote`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                supporting: choice1,
+                against: choice2
+            })
+        }).then(() => {
+            loadNewChoices();
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+            vote(choice1ID, choice2ID);
+        } else if (event.key === 'ArrowRight') {
+            vote(choice2ID, choice1ID);
+        }
+    });
+</script>
+
+<div id="choices">
+
+    <div class="window glass active main" id="choice1">
+        <div class="title-bar">
+            <div class="title-bar-text">
+              <img src="https://dearrow.ajay.app/favicon-32x32.png" height="14px" alt=""> Choice 1
+            </div>
+        </div>
+
+        <div class="window-body has-space">
+            <div id="choice1text">
+
+            </div>
+
+            <div id="choice1image">
+            </div>
+        </div>
+    </div>
+
+    <div class="window glass active main" id="choice2">
+        <div class="title-bar">
+            <div class="title-bar-text">
+              <img src="https://dearrow.ajay.app/favicon-32x32.png" height="14px" alt=""> Choice 2
+            </div>
+        </div>
+
+        <div class="window-body has-space">
+            <div id="choice2text">
+
+            </div>
+    
+            <div id="choice2image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* one on left, one on right */
+
+    #choices {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+    }
+
+    #choice2, #choice1 {
+        max-width: 35%;
+        height: fit-content;
+    }
+
+    #choice1text, #choice2text {
+        padding: 10px;
+
+        font-size: 14px;
+    }
+
+    .window-body img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    body {
+        background-image: url("images/background.jpg");
+        background-size: cover;
+
+        color: white;
+
+        --window-spacing: 6px;
+        --window-border: 1px solid;
+        --window-border-radius: 6px;
+        --window-border-color: rgba(0,0,0,.7);
+        --window-background-color: #4580c4;
+        --window-background-glass-stripes: linear-gradient(135deg,#fff5 70px,transparent 100px),linear-gradient(225deg,#fff5 70px,transparent 100px),linear-gradient(54deg,#0002 0 4%,#6661 6% 6%,#0002 8% 10%,#0002 15% 16%,#aaa1 17% 18%,#0002 23% 24%,#bbb2 25% 26%,#0002 31% 33%,#0002 34% 34.5%,#bbb2 36% 40%,#0002 41% 41.5%,#bbb2 44% 45%,#bbb2 46% 47%,#0002 48% 49%,#0002 50% 50.5%,#0002 56% 56.5%,#bbb2 57% 63%,#0002 67% 69%,#bbb2 69.5% 70%,#0002 73.5% 74%,#bbb2 74.5% 79%,#0002 80% 84%,#aaa2 85% 86%,#0002 87%,#bbb1 90%) left center/100vw 100vh no-repeat fixed;
+        --window-background: linear-gradient(to right,#ffffff66,#0000001a,#ffffff33),var(--window-background-color);
+    }
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/7.css">c
