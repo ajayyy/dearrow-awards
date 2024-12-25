@@ -27,8 +27,8 @@
         document.getElementById('choice1text').innerText = choice1.content;
         document.getElementById('choice2text').innerText = choice2.content;
 
-        addImages(document.getElementById('choice1image'), choice1.attachments);
-        addImages(document.getElementById('choice2image'), choice2.attachments);
+        addImages(document.getElementById('choice1image'), choice1.attachments, choice1.content);
+        addImages(document.getElementById('choice2image'), choice2.attachments, choice2.content);
     }
 
     function vote(choice1, choice2) {
@@ -55,7 +55,7 @@
         }
     });
 
-    function addImages(images, attachments) {
+    function addImages(images, attachments, text) {
         images.innerHTML = "";
         if (attachments.length > 0) {
             for (const attachment of attachments) {
@@ -72,6 +72,19 @@
                     const img = document.createElement('img');
                     img.src = attachment;
                     images.appendChild(img);
+                }
+            }
+        }
+
+        if (text.includes("youtube.com")) {
+            const urls = text.match(/(https?:\/\/[^\s]+)/g);
+            for (const url of urls) {
+                if (url.includes("youtube.com")) {
+                    const video = document.createElement('iframe');
+                    video.src = url.replace(/[<>]/g, '');
+                    video.height = 315;
+                    video.style.width = "100%";
+                    images.appendChild(video);
                 }
             }
         }
