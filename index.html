@@ -5,11 +5,11 @@
     document.addEventListener('DOMContentLoaded', async () => {
         await loadNewChoices();
 
-        document.getElementById('choice1').addEventListener('mousedown', () => {
+        document.getElementById('choice1').addEventListener('click', () => {
             vote(choice1ID, choice2ID);
         });
 
-        document.getElementById('choice2').addEventListener('mousedown', () => {
+        document.getElementById('choice2').addEventListener('click', () => {
             vote(choice2ID, choice1ID);
         });
     });
