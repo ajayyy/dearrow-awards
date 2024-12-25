@@ -76,16 +76,16 @@
             }
         }
 
-        if (text.includes("youtube.com")) {
-            const urls = text.match(/(https?:\/\/[^\s]+)/g);
-            for (const url of urls) {
-                if (url.includes("youtube.com")) {
-                    const video = document.createElement('iframe');
-                    video.src = url.replace(/[<>]/g, '');
-                    video.height = 315;
-                    video.style.width = "100%";
-                    images.appendChild(video);
-                }
+        const urls = text.match(/(https?:\/\/[^\s]+)/g);
+        for (const url of urls) {
+            if (url.match(/youtube.com|youtu.be/)) {
+                const urlObject = new URL(url.replace(/[<>]/g, ''));
+                const videoID = urlObject.searchParams.get("v") ?? urlObject.pathname.split('/').pop();
+                const video = document.createElement('iframe');
+                video.src = `https://www.youtube.com/embed/${videoID}`;
+                video.height = 315;
+                video.style.width = "100%";
+                images.appendChild(video);
             }
         }
     }
