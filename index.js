@@ -58,9 +58,12 @@ app.get('/find', async (req, res) => {
     res.json(await generateChoicesWithAnImage());
 });
 
+const minScore = 981;
+
 async function generateChoicesWithAnImage() {
     let choices = await generateChoices();
-    while (choices.choice1.attachments.length === 0 && choices.choice2.attachments.length === 0) {
+    while ((choices.choice1.attachments.length === 0 && choices.choice2.attachments.length === 0)
+        || ((choices.score < minScore || choices.choice2.score < minScore) && Math.random() < 0.9)) {
         choices = await generateChoices();
     }
 
