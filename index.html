@@ -27,19 +27,8 @@
         document.getElementById('choice1text').innerText = choice1.content;
         document.getElementById('choice2text').innerText = choice2.content;
 
-        document.getElementById('choice1image').innerHTML = "";
-        if (choice1.attachments.length > 0) {
-            const img = document.createElement('img');
-            img.src = choice1.attachments[0];
-            document.getElementById('choice1image').appendChild(img);
-        }
-
-        document.getElementById('choice2image').innerHTML = "";
-        if (choice2.attachments.length > 0) {
-            const img = document.createElement('img');
-            img.src = choice2.attachments[0];
-            document.getElementById('choice2image').appendChild(img);
-        }
+        addImages(document.getElementById('choice1image'), choice1.attachments);
+        addImages(document.getElementById('choice2image'), choice2.attachments);
     }
 
     function vote(choice1, choice2) {
@@ -65,6 +54,28 @@
             vote(choice2ID, choice1ID);
         }
     });
+
+    function addImages(images, attachments) {
+        images.innerHTML = "";
+        if (attachments.length > 0) {
+            for (const attachment of attachments) {
+                if (attachment.endsWith('.mp4')) {
+                    const video = document.createElement('video');
+                    video.src = attachment;
+                    video.controls = true;
+                    images.appendChild(video);
+                } else if (attachment.endsWith('.pdf')) {
+                    const embed = document.createElement('iframe');
+                    embed.src = attachment;
+                    images.appendChild(embed);
+                } else {
+                    const img = document.createElement('img');
+                    img.src = attachment;
+                    images.appendChild(img);
+                }
+            }
+        }
+    }
 </script>
 
 <div id="choices">
